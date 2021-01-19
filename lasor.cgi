@@ -41,8 +41,27 @@ if 'input_file' in form:
 
 if img is not None:
 	try:
-		imgopts = ['-dither','FloydSteinberg','-colors','2']
-		p= subprocess.Popen(['convert','jpg:-']+imgopts+['jpg:-'],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
+		fname = filetype+":-"
+
+		p= subprocess.Popen(['identify','-format',"%[fx:w] %[fx:h]",fname],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
+		p.stdin.write(str(base64.b64decode(img)))
+		(imageid,stderr) = p.communicate()
+		(imgw,imgh) = imageid.split()
+		opts['debug']+="Image is {0}x{1}".format(imgw,imgh)
+
+		#imgopts = ['-grayscale','average'] 
+		imgopts = ['-colorspace','Gray'] 
+
+		# Get from /etc/ImageMagick-6/thresholds.xml
+		#imgopts += ['-dither','FloydSteinberg','-colors','2']
+		#imgopts += ['-ordered-dither','h4x4o']
+		imgopts += ['-brightness-contrast','20,45']
+		#imgopts += ['-ordered-dither','c7x7b']
+		imgopts += ['-ordered-dither','h8x8a']
+		#imgopts += ['-ordered-dither','checks']
+		#imgopts += ['-ordered-dither','h4x4a']
+		#imgopts += ['-ordered-dither','c7x7w']
+		p= subprocess.Popen(['convert',fname]+imgopts+[fname],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
 		p.stdin.write(str(base64.b64decode(img)))
 		(out,stderr) = p.communicate()
 		out = base64.b64encode(out)
