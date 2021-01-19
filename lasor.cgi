@@ -11,6 +11,8 @@ opts={}
 opts['filecont']=""
 opts['debug']=""
 opts['form']=""
+opts['height']=""
+opts['width']=""
 opts['title']="The title"
 img=None
 filetype=None
@@ -48,6 +50,8 @@ if img is not None:
 		(imageid,stderr) = p.communicate()
 		(imgw,imgh) = imageid.split()
 		opts['debug']+="Image is {0}x{1}".format(imgw,imgh)
+		opts['width']=imgw
+		opts['height']=imgh
 
 		#imgopts = ['-grayscale','average'] 
 		imgopts = ['-colorspace','Gray'] 
