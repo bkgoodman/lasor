@@ -87,6 +87,25 @@ function change_res_type() {
 
 }
 
+/* WHen we change the destination width, change the dest height, proportionaly */
+function change_width() {
+	var w = document.getElementById("input_width").value;
+	var h = document.getElementById("input_height").value;
+	var dw = document.getElementById("input_dest_width").value;
+	var dh = document.getElementById("input_dest_height");
+
+	dh.value = (w*dw/h)
+}
+
+/* WHen we change the destination height, change the dest width, proportionaly */
+function change_height() {
+	var w = document.getElementById("input_width").value;
+	var h = document.getElementById("input_height").value;
+	var dh = document.getElementById("input_dest_height").value;
+	var dw = document.getElementById("input_dest_width");
+
+	dw.value = (h*dh/w)
+}
 function change_brightness() {
 	var t = document.getElementById("input_brightness");
 	var s = document.getElementById("input_brightness_slider");

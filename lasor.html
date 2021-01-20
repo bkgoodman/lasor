@@ -56,11 +56,11 @@
 								<div class="input-group-prepend">
 									<span class="input-group-text" id="basic-addon1">Width</span>
 								</div>
-									<input type="text" class="form-control" id="input_dest_width" value="{dest_width}" name="input_dest_width"  aria-label="Username" aria-describedby="basic-addon1">
+									<input oninput="change_width();" type="text" class="form-control" id="input_dest_width" value="{dest_width}" name="input_dest_width"  aria-label="Username" aria-describedby="basic-addon1">
 								<div class="input-group-prepend">
 									<span class="input-group-text" id="basic-addon1">Height</span>
 								</div>
-									<input type="text" class="form-control" id="input_dest_height" value="{dest_height}" name="input_dest_height"  aria-label="Username" aria-describedby="basic-addon1">
+									<input oninput="change_height();" type="text" class="form-control" id="input_dest_height" value="{dest_height}" name="input_dest_height"  aria-label="Username" aria-describedby="basic-addon1">
 									<select onfocus="src_unit_focus();" onchange="src_unit_update();"  name="input_unit" class="custom-select" id="input_unit" aria-label="Example select with button addon">
 										<option selected value="pixels">Pixels</option>
 										<option value="inches">Inches</option>

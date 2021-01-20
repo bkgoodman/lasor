@@ -94,7 +94,12 @@ if img is not None:
 			opts['posterize'] = "input_posterize_"+form['input_posterize'].value.strip()
 
 		if 'input_dpi' in form:
+			dpi = 300
 			opts['dpi'] = form['input_dpi'].value.strip()
+			try:
+				dpi = int(opts['dpi'].strip())
+			except:
+				pass
 		if 'input_scangap' in form:
 			opts['scangap'] = form['input_scangap'].value.strip()
 		if 'input_res_type' in form:
@@ -115,6 +120,16 @@ if img is not None:
 
 		opts['debug']+=str(dict(form))
 		imgopts = []
+
+		ww = opts['dest_width']
+		hh = opts['dest_height']
+		if opts['dest_unit'] == 'inches':
+			ww *= dpi
+			hh *= dpi
+		elif opts['dest_unit'] == 'centimeteres':
+			ww *= dpi/2.54
+			hh *= dpi/2.54
+		imgopts +=['-scale','{0}x{1}'.format(str(int(ww)),str(int(hh)))]
 		#imgopts = ['-grayscale','average'] 
 		if 'input_posterize' in form:
 			try:
@@ -129,18 +144,28 @@ if img is not None:
 				pass
 		imgopts += ['-colorspace','Gray'] 
 
-		imgopts += ['-normalize']
 		# Get from /etc/ImageMagick-6/thresholds.xml
-		#imgopts += ['-dither','FloydSteinberg','-colors','2']
-		#imgopts += ['-ordered-dither','h4x4o']
 		if brightness != 0 or contrast != 0:
 			imgopts += ['-brightness-contrast',"{0},{1}".format(brightness,contrast)]
+
+		#imgopts +=['-threshold','30%']
+		imgopts += ['-normalize']
+
+		imgopts +=['-scale','50%x50%']
+		imgopts += ['-dither','FloydSteinberg','-colors','2']
+		imgopts +=['-scale','200%x200%']
+
+		#imgopts += ['-ordered-dither','h4x4o']
 		#imgopts += ['-ordered-dither','c7x7b']
-		imgopts += ['-ordered-dither','h8x8a']
+		#imgopts += ['-ordered-dither','h8x8a']
 		#imgopts += ['-ordered-dither','checks']
 		#imgopts += ['-ordered-dither','h4x4a']
 		#imgopts += ['-ordered-dither','c7x7w']
+		#imgopts += ['+dither']
+		imgopts +=['-threshold','50%']
 		
+		opts['debug'] += "\n"
+		opts['debug'] += " ".join(imgopts)
 		p= subprocess.Popen(['convert',fname]+imgopts+[fname],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
 		p.stdin.write(str(base64.b64decode(img)))
 		(out,stderr) = p.communicate()
