@@ -13,6 +13,8 @@ opts['debug']=""
 opts['form']=""
 opts['height']=""
 opts['width']=""
+opts['brightness']=50
+opts['contrast']=50
 opts['title']="The title"
 img=None
 filetype=None
@@ -41,6 +43,12 @@ if 'input_file' in form:
 			opts['form'] += '<input type="hidden" id="input_origfile" name="input_origfile" value="{0}"></input>'.format(img)+"\n"
 			opts['form'] += '<input type="hidden" id="input_origfiletype" name="input_origfiletype" value="{0}"></input>'.format(filetype)+"\n"
 
+opts['dest_width']=""
+opts['dest_height']=""
+opts['dest_unit']=""
+opts['scangap']=""
+opts['dpi']=""
+opts['res_type']=""
 if img is not None:
 	try:
 		fname = filetype+":-"
@@ -52,6 +60,35 @@ if img is not None:
 		opts['debug']+="Image is {0}x{1}".format(imgw,imgh)
 		opts['width']=imgw
 		opts['height']=imgh
+
+		if 'input_dest_width' in form:
+			try:
+				opts['dest_width'] = float(form['input_dest_width'].value)
+			except BaseException as e:
+				opts['dest_width'] = imgw
+		if 'input_dest_height' in form:
+			try:
+				opts['dest_height'] = float(form['input_dest_height'].value)
+			except:
+				opts['dest_height'] = imgh
+		opts['dest_unit']=""
+		if 'input_unit' in form and form['input_unit'].value.strip() != "":
+			opts['dest_unit'] = form['input_unit'].value
+		else:
+			opts['dest_unit'] = "pixels"
+
+		if 'input_dpi' in form:
+			opts['dpi'] = form['input_dpi'].value.strip()
+		if 'input_scangap' in form:
+			opts['scangap'] = form['input_scangap'].value.strip()
+		if 'input_res_type' in form:
+			opts['res_type'] = form['input_res_type'].value.strip()
+		if 'input_brightness' in form:
+			opts['brightness'] = form['input_brightness'].value.strip()
+		if 'input_contrast' in form:
+			opts['contrast'] = form['input_contrast'].value.strip()
+
+		
 
 		#imgopts = ['-grayscale','average'] 
 		imgopts = ['-colorspace','Gray'] 
