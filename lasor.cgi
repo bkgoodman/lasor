@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import cgitb
+import sys
 import cgi
 import base64
 import subprocess
@@ -49,6 +50,7 @@ opts['dest_unit']=""
 opts['scangap']=""
 opts['dpi']=""
 opts['res_type']=""
+opts['posterize']="input_posterize_none"
 if img is not None:
 	try:
 		fname = filetype+":-"
@@ -77,39 +79,63 @@ if img is not None:
 		else:
 			opts['dest_unit'] = "pixels"
 
+		if 'input_posterize' in form:
+			opts['posterize'] = "input_posterize_"+form['input_posterize'].value.strip()
+
 		if 'input_dpi' in form:
 			opts['dpi'] = form['input_dpi'].value.strip()
 		if 'input_scangap' in form:
 			opts['scangap'] = form['input_scangap'].value.strip()
 		if 'input_res_type' in form:
 			opts['res_type'] = form['input_res_type'].value.strip()
-		if 'input_brightness' in form:
-			opts['brightness'] = form['input_brightness'].value.strip()
-		if 'input_contrast' in form:
-			opts['contrast'] = form['input_contrast'].value.strip()
+		try:
+			if 'input_brightness' in form:
+				opts['brightness'] = int(form['input_brightness'].value.strip())
+			if 'input_contrast' in form:
+				opts['contrast'] = int(form['input_contrast'].value.strip())
+		except:
+				opts['brightness'] = 50
+				opts['contrast'] = 50
+
+		brightness = opts['brightness']-50
+		contrast = opts['contrast']-50
 
 		
 
+		opts['debug']+=str(dict(form))
+		imgopts = []
 		#imgopts = ['-grayscale','average'] 
-		imgopts = ['-colorspace','Gray'] 
+		if 'input_posterize' in form:
+			try:
+				imgopts += ['-posterize',str(int(form['input_posterize'].value))]
+				opts['debug'] += "\n"+"POSTERIZE "+str(int(form['input_posterize'].value))+"\n"
+			except BaseException as e:
+				opts['debug'] += "Posetize err"+str(e)
+				pass
+		imgopts += ['-colorspace','Gray'] 
 
 		# Get from /etc/ImageMagick-6/thresholds.xml
 		#imgopts += ['-dither','FloydSteinberg','-colors','2']
 		#imgopts += ['-ordered-dither','h4x4o']
-		imgopts += ['-brightness-contrast','20,45']
+		if brightness != 0 or contrast != 0:
+			imgopts += ['-brightness-contrast',"{0},{1}".format(brightness,contrast)]
 		#imgopts += ['-ordered-dither','c7x7b']
 		imgopts += ['-ordered-dither','h8x8a']
 		#imgopts += ['-ordered-dither','checks']
 		#imgopts += ['-ordered-dither','h4x4a']
 		#imgopts += ['-ordered-dither','c7x7w']
+		
+		imgopts += ['-normalize']
 		p= subprocess.Popen(['convert',fname]+imgopts+[fname],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
 		p.stdin.write(str(base64.b64decode(img)))
 		(out,stderr) = p.communicate()
+		opts['debug'] += str(stderr)
 		out = base64.b64encode(out)
 		opts['filecont']+='<p>OUTPUT</p>'
 		opts['filecont']+='<img src="data:image/{filetype};base64, {img}" alt="Retained file" />'.format(img=out,filetype=str(filetype))
 	except BaseException as e:
 		opts['filecont']+=str(e)
+		opts['filecont']+=str(sys.exc_info())
 print "Content-type: text/html"
 print
 fd = open("lasor.html")
