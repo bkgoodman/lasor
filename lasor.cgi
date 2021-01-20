@@ -150,18 +150,35 @@ if img is not None:
 
 		#imgopts +=['-threshold','30%']
 		imgopts += ['-normalize']
+		#### imgopts += ['-edge','2']
 
-		imgopts +=['-scale','50%x50%']
-		imgopts += ['-dither','FloydSteinberg','-colors','2']
-		imgopts +=['-scale','200%x200%']
+		#imgopts +=['-scale','50%x50%']
+		#imgopts += ['-dither','FloydSteinberg','-colors','2']
+		#imgopts +=['-scale','200%x200%']
 
+		if 'input_dither' in form:
+			imgopts += ['-ordered-dither',form['input_dither'].value]
 		#imgopts += ['-ordered-dither','h4x4o']
 		#imgopts += ['-ordered-dither','c7x7b']
 		#imgopts += ['-ordered-dither','h8x8a']
 		#imgopts += ['-ordered-dither','checks']
 		#imgopts += ['-ordered-dither','h4x4a']
 		#imgopts += ['-ordered-dither','c7x7w']
-		#imgopts += ['+dither']
+		ditheropts = [
+			'Simple BW Threshold',
+			'Floyd Steinberg',
+			'h4x4o',
+			'c7x7b',
+			'h8x8a',
+			'checks',
+			'h4x4a',
+			'c7x7w'
+		]
+		opts['ditheropts']=""
+		for x in ditheropts:
+			opts['ditheropts'] += "<option value='{0}'>{0}</option>\n".format(x)
+	
+
 		imgopts +=['-threshold','50%']
 		
 		opts['debug'] += "\n"
@@ -172,7 +189,7 @@ if img is not None:
 		opts['debug'] += str(stderr)
 		out = base64.b64encode(out)
 		opts['filecont']+='<p>OUTPUT</p>'
-		opts['filecont']+='<img src="data:image/{filetype};base64, {img}" alt="Retained file" />'.format(img=out,filetype=str(filetype))
+		opts['filecont'] ='<img src="data:image/{filetype};base64, {img}" alt="Retained file" />'.format(img=out,filetype=str(filetype))+ "<br/>"+ opts['filecont']
 	except BaseException as e:
 		opts['filecont']+=str(e)
 		opts['filecont']+=str(sys.exc_info())

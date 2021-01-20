@@ -135,6 +135,12 @@
 									</label>
 								</div>
 							</div> <!-- Input Goup -->
+							<h6 class="card-subtitle mb-2 text-muted">Dithering</h6>
+							<div class="input-group mb-3">
+								<select class="custom-select my-1 mr-sm-2" id="input_dither" name="input_dither">
+									{ditheropts}
+								</select>
+							</div> <!-- Input Goup -->
 						</div> <!-- Form Group -->
 					</div> <!-- Card_body -->
 				</div> <!-- Card -->
@@ -142,12 +148,12 @@
 				<input type="submit" id="input_ok" name="input_ok" value="OK"></input>
 			{form}
 		</form>
-	<pre>
-	{debug}
-	</pre>
 	<div>
 	{filecont}
 	</div>
+	<pre>
+	{debug}
+	</pre>
 	</body>
 <script type="text/javascript">
 	document.getElementById("input_unit").value="{dest_unit}";
