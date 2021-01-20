@@ -19,6 +19,7 @@ opts['contrast']=50
 opts['title']="The title"
 img=None
 filetype=None
+loadfile=False
 if 'input_file' in form:
 	fi = form['input_file']
 	opts['debug']+=str(dir(fi))+"\n"
@@ -32,6 +33,7 @@ if 'input_file' in form:
 			#opts['debug']+=str(dir(fi))
 			#opts['debug']+="\n"
 			opts['debug']+=str(fi.filename)
+			loadfile=True
 			opts['form'] += '<input type="hidden" id="input_origfile" name="input_origfile" value="{0}"></input>'.format(img)+"\n"
 			opts['form'] += '<input type="hidden" id="input_origfiletype" name="input_origfiletype" value="{0}"></input>'.format(filetype)+"\n"
 		except BaseException as e:
@@ -48,7 +50,7 @@ opts['dest_width']=""
 opts['dest_height']=""
 opts['dest_unit']=""
 opts['scangap']=""
-opts['dpi']=""
+opts['dpi']="300"
 opts['res_type']=""
 opts['posterize']="input_posterize_none"
 if img is not None:
@@ -63,18 +65,27 @@ if img is not None:
 		opts['width']=imgw
 		opts['height']=imgh
 
-		if 'input_dest_width' in form:
+		if loadfile:
+				opts['dest_width'] = imgw
+		elif 'input_dest_width' in form:
 			try:
 				opts['dest_width'] = float(form['input_dest_width'].value)
 			except BaseException as e:
 				opts['dest_width'] = imgw
-		if 'input_dest_height' in form:
+
+		if loadfile:
+				opts['dest_height'] = imgh
+		elif 'input_dest_height' in form:
 			try:
 				opts['dest_height'] = float(form['input_dest_height'].value)
 			except:
 				opts['dest_height'] = imgh
 		opts['dest_unit']=""
-		if 'input_unit' in form and form['input_unit'].value.strip() != "":
+
+		if loadfile:
+			opts['dest_unit'] = "pixels"
+			opts['dest_unit'] = "pixels"
+		elif 'input_unit' in form and form['input_unit'].value.strip() != "":
 			opts['dest_unit'] = form['input_unit'].value
 		else:
 			opts['dest_unit'] = "pixels"
@@ -107,13 +118,18 @@ if img is not None:
 		#imgopts = ['-grayscale','average'] 
 		if 'input_posterize' in form:
 			try:
-				imgopts += ['-posterize',str(int(form['input_posterize'].value))]
+				imgopts += ['-colors',str(int(form['input_posterize'].value))]
+				imgopts += ['-median','2']
+				pval = int(form['input_posterize'].value)
+				if pval > 2: pval=2
+				imgopts += ['-posterize',str(pval)]
 				opts['debug'] += "\n"+"POSTERIZE "+str(int(form['input_posterize'].value))+"\n"
 			except BaseException as e:
 				opts['debug'] += "Posetize err"+str(e)
 				pass
 		imgopts += ['-colorspace','Gray'] 
 
+		imgopts += ['-normalize']
 		# Get from /etc/ImageMagick-6/thresholds.xml
 		#imgopts += ['-dither','FloydSteinberg','-colors','2']
 		#imgopts += ['-ordered-dither','h4x4o']
@@ -125,7 +141,6 @@ if img is not None:
 		#imgopts += ['-ordered-dither','h4x4a']
 		#imgopts += ['-ordered-dither','c7x7w']
 		
-		imgopts += ['-normalize']
 		p= subprocess.Popen(['convert',fname]+imgopts+[fname],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
 		p.stdin.write(str(base64.b64decode(img)))
 		(out,stderr) = p.communicate()

@@ -1,15 +1,53 @@
 /* Lasor stuff*/
 
 var lastUnit="";
+
+function round4(num) {
+	return (Math.round((num + Number.EPSILON) * 10000) / 10000);
+}
+
+function round2(num) {
+	return (Math.round((num + Number.EPSILON) * 100) / 100);
+}
+
 function src_unit_update() {
 	var u = document.getElementById("input_unit");
+	var w = document.getElementById("input_dest_width");
+	var h = document.getElementById("input_dest_height");
+	var dpi = document.getElementById("input_dpi").value;
 
 	console.log("Change from",lastUnit,"to",u.value);
+	if ((lastUnit == "centimeters") && (u.value == "pixels")) {
+		w.value = Math.round((w.value / 2.54) * dpi);
+		h.value = Math.round((h.value / 2.54) *dpi);
+	}
+	else if ((lastUnit == "pixels") && (u.value == "centimeters")) {
+		w.value = round2(w.value / dpi * 2.54);
+		h.value = round2(h.value / dpi * 2.54);
+	}
+	else if ((lastUnit == "pixels") && (u.value == "inches")) {
+		w.value = Math.round(w.value / dpi);
+		h.value = Math.round(h.value / dpi);
+	}
+	else if ((lastUnit == "inches") && (u.value == "pixels")) {
+		w.value = round4(w.value * dpi);
+		h.value = round4(h.value * dpi)
+	}
+	else if ((lastUnit == "inches") && (u.value == "centimeters")) {
+		w.value = round2(w.value *2.54);
+		h.value = round2(h.value *2.54)
+	}
+	else if ((lastUnit == "centimeters") && (u.value == "inches")) {
+		w.value = round4(w.value /2.54);
+		h.value = round4(h.value /2.54)
+	}
+	lastUnit=u.value;
 }
 
 function src_unit_focus() {
 	var u = document.getElementById("input_unit");
 
+	console.log("Focus got",u.value);
 	lastUnit=u.value;
 }
 /*
