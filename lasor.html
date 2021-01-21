@@ -98,6 +98,7 @@
 								</div>
 									<input onchange="change_contrast_slider();" type="range" style="width:80%" class="mx-3 form-range" min="0" max="100" id="input_contrast_slider" value="{contrast}">
 									<input oninput="change_contrast();" type="text" width="3" class="form-control" id="input_contrast" name="input_contrast" aria-label="Username" aria-describedby="basic-addon1" value="{contrast}">%
+
 							</div> <!-- Input Goup -->
 							<div class="input-group mb-3">
 								<div class="input-group-prepend">
@@ -106,6 +107,24 @@
 									<input onchange="change_brightness_slider();" type="range" style="width:80%" class="mx-3 form-range" id="input_brightness_slider" min="0" max="100" id="customRange2" value="{brightness}">
 									<input oninput="change_brightness();" type="text" width="3" class="form-control" id="input_brightness" name="input_brightness" aria-label="Username" aria-describedby="basic-addon1" value="{brightness}">%
 							</div> <!-- Input Goup -->
+
+							</div> <!-- Input Goup -->
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1">Black Threshold</span>
+								</div>
+									<input onchange="change_black_threshold_slider();" type="range" style="width:70%" class="mx-3 form-range" id="input_black_threshold_slider" min="0" max="100" id="customRange2" value="{black_threshold}">
+									<input oninput="change_black_threshold();" type="text" width="3" class="form-control" id="input_black_threshold" name="input_black_threshold" aria-label="Username" aria-describedby="basic-addon1" value="{black_threshold}">%
+							</div> <!-- Input Goup -->
+
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1">White Threshold</span>
+								</div>
+									<input onchange="change_white_threshold_slider();" type="range" style="width:70%" class="mx-3 form-range" id="input_white_threshold_slider" min="0" max="100" id="customRange2" value="{white_threshold}">
+									<input oninput="change_white_threshold();" type="text" width="5" class="form-control" id="input_white_threshold" name="input_white_threshold" aria-label="Username" aria-describedby="basic-addon1" value="{white_threshold}">%
+							</div> <!-- Input Goup -->
+
 							<h6 class="card-subtitle mb-2 text-muted">Posterization Levels</h6>
 							<div class="input-group mb-3">
 								<div class="btn-group btn-group-toggle" data-toggle="buttons">

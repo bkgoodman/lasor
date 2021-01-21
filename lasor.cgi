@@ -49,6 +49,8 @@ if 'input_file' in form:
 opts['dest_width']=""
 opts['dest_height']=""
 opts['threshold']=50
+opts['black_threshold']=0
+opts['white_threshold']=100
 opts['dest_unit']=""
 opts['scangap']=""
 opts['dpi']="300"
@@ -93,6 +95,10 @@ if img is not None:
 
 		if 'input_threshold' in form:
 			opts['threshold'] = form['input_threshold'].value
+		if 'input_white_threshold' in form:
+			opts['white_threshold'] = form['input_white_threshold'].value
+		if 'input_black_threshold' in form:
+			opts['black_threshold'] = form['input_black_threshold'].value
 		if 'input_posterize' in form:
 			opts['posterize'] = "input_posterize_"+form['input_posterize'].value.strip()
 
@@ -135,10 +141,11 @@ if img is not None:
 		imgopts +=['-scale','{0}x{1}'.format(str(int(ww)),str(int(hh)))]
 		#imgopts += ['-segment',"1.5x1.5"]
 		#imgopts = ['-grayscale','average'] 
+		#imgopts += ['-colors','2']
 		if 'input_posterize' in form and form['input_posterize'].value != 'none':
 			try:
-				#imgopts += ['-colors',str(int(form['input_posterize'].value))]
-				#imgopts += ['-median','2']
+				imgopts += ['-colors',str(int(form['input_posterize'].value))]
+				imgopts += ['-median','2']
 				pval = int(form['input_posterize'].value)
 				if pval > 2: pval=2
 				imgopts += ['-posterize',str(pval)]
@@ -152,6 +159,11 @@ if img is not None:
 		if brightness != 0 or contrast != 0:
 			imgopts += ['-brightness-contrast',"{0},{1}".format(brightness,contrast)]
 
+		if 'input_white_threshold' in form and form['input_white_threshold'].value.strip() != "":
+			imgopts += ['-white-threshold',form['input_white_threshold'].value+"%"]
+
+		if 'input_black_threshold' in form and form['input_black_threshold'].value.strip() != "":
+			imgopts += ['-black-threshold',form['input_black_threshold'].value+"%"]
 		#### imgopts += ['-edge','2']
 
 		#imgopts +=['-scale','50%x50%']
@@ -181,12 +193,24 @@ if img is not None:
 			'Simple BW Threshold',
 			'Floyd Steinberg',
 			'Floyd Steinberg (Fine)',
-			'h4x4o',
-			'c7x7b',
-			'h8x8a',
-			'checks',
-			'h4x4a',
-			'c7x7w'
+			"checks",
+			"o2x2",
+			"o3x3",
+			"o4x4",
+			"o8x8",
+			"h4x4a",
+			"h6x6a",
+			"h8x8a",
+			"h4x4o",
+			"h6x6o",
+			"h8x8o",
+			"h16x16o",
+			"c5x5b",
+			"c5x5w",
+			"c6x6b",
+			"c6x6w",
+			"c7x7b",
+			"c7x7w"
 		]
 		opts['ditheropts']=""
 		for x in ditheropts:
@@ -198,6 +222,12 @@ if img is not None:
 
 		imgopts += ['-normalize']
 		#imgopts +=['-threshold','50%']
+
+		#
+		# Torque the image for display
+		# Double the width
+		#imgopts+=['-size','200%x100%']
+		
 		
 		opts['debug'] += "\n"
 		opts['debug'] += " ".join(imgopts)

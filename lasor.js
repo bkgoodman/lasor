@@ -112,6 +112,18 @@ function change_brightness() {
 	s.value = t.value;
 }
 
+function change_black_threshold() {
+	var t = document.getElementById("input_black_threshold");
+	var s = document.getElementById("input_black_threshold_slider");
+	s.value = t.value;
+}
+
+function change_white_threshold() {
+	var t = document.getElementById("input_white_threshold");
+	var s = document.getElementById("input_white_threshold_slider");
+	s.value = t.value;
+}
+
 function change_contrast() {
 	var t = document.getElementById("input_contrast");
 	var s = document.getElementById("input_contrast_slider");
@@ -121,6 +133,18 @@ function change_contrast() {
 function change_threshold_slider() {
 	var t = document.getElementById("input_threshold");
 	var s = document.getElementById("input_threshold_slider");
+	t.value = s.value;
+}
+
+function change_white_threshold_slider() {
+	var t = document.getElementById("input_white_threshold");
+	var s = document.getElementById("input_white_threshold_slider");
+	t.value = s.value;
+}
+
+function change_black_threshold_slider() {
+	var t = document.getElementById("input_black_threshold");
+	var s = document.getElementById("input_black_threshold_slider");
 	t.value = s.value;
 }
 
