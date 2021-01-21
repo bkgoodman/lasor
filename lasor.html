@@ -137,9 +137,16 @@
 							</div> <!-- Input Goup -->
 							<h6 class="card-subtitle mb-2 text-muted">Dithering</h6>
 							<div class="input-group mb-3">
-								<select class="custom-select my-1 mr-sm-2" id="input_dither" name="input_dither">
+								<select onchange="change_dither();" class="custom-select my-1 mr-sm-2" id="input_dither" name="input_dither">
 									{ditheropts}
 								</select>
+							</div> <!-- Input Goup -->
+							<div class="input-group mb-3" id="threshold_group">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1">Threshold</span>
+								</div>
+									<input onchange="change_threshold_slider();" type="range" style="width:80%" class="mx-3 form-range" id="input_threshold_slider" min="0" max="100" id="customRange2" value="{threshold}">
+									<input oninput="change_threshold();" type="text" width="3" class="form-control" id="input_threshold" name="input_threshold" aria-label="Username" aria-describedby="basic-addon1" value="{threshold}">%
 							</div> <!-- Input Goup -->
 						</div> <!-- Form Group -->
 					</div> <!-- Card_body -->
@@ -159,5 +166,7 @@
 	document.getElementById("input_unit").value="{dest_unit}";
 	document.getElementById("input_res_type").value="{res_type}";
 	$("#{posterize}").click();
+	$("#{posterize}").click();
+	change_dither();
 </script>
 </html>

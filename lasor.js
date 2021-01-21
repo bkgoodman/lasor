@@ -118,6 +118,12 @@ function change_contrast() {
 	s.value = t.value;
 }
 
+function change_threshold_slider() {
+	var t = document.getElementById("input_threshold");
+	var s = document.getElementById("input_threshold_slider");
+	t.value = s.value;
+}
+
 function change_brightness_slider() {
 	var t = document.getElementById("input_brightness");
 	var s = document.getElementById("input_brightness_slider");
@@ -142,4 +148,15 @@ function change_dpi() {
 	document.getElementById("input_res_type").value ="custom"
 
 	sg.value = 25.4/(dpi.value);
+}
+
+function change_dither() {
+	var d = document.getElementById("input_dither");
+	var g = document.getElementById("threshold_group");
+	console.log(d.value);
+	if (d.value == "Simple BW Threshold") {
+		g.style.display="flex";
+	}
+	else
+		g.style.display="none";
 }

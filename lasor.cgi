@@ -48,6 +48,7 @@ if 'input_file' in form:
 
 opts['dest_width']=""
 opts['dest_height']=""
+opts['threshold']=50
 opts['dest_unit']=""
 opts['scangap']=""
 opts['dpi']="300"
@@ -90,6 +91,8 @@ if img is not None:
 		else:
 			opts['dest_unit'] = "pixels"
 
+		if 'input_threshold' in form:
+			opts['threshold'] = form['input_threshold'].value
 		if 'input_posterize' in form:
 			opts['posterize'] = "input_posterize_"+form['input_posterize'].value.strip()
 
@@ -130,11 +133,12 @@ if img is not None:
 			ww *= dpi/2.54
 			hh *= dpi/2.54
 		imgopts +=['-scale','{0}x{1}'.format(str(int(ww)),str(int(hh)))]
+		#imgopts += ['-segment',"1.5x1.5"]
 		#imgopts = ['-grayscale','average'] 
-		if 'input_posterize' in form:
+		if 'input_posterize' in form and form['input_posterize'].value != 'none':
 			try:
-				imgopts += ['-colors',str(int(form['input_posterize'].value))]
-				imgopts += ['-median','2']
+				#imgopts += ['-colors',str(int(form['input_posterize'].value))]
+				#imgopts += ['-median','2']
 				pval = int(form['input_posterize'].value)
 				if pval > 2: pval=2
 				imgopts += ['-posterize',str(pval)]
@@ -148,8 +152,6 @@ if img is not None:
 		if brightness != 0 or contrast != 0:
 			imgopts += ['-brightness-contrast',"{0},{1}".format(brightness,contrast)]
 
-		#imgopts +=['-threshold','30%']
-		imgopts += ['-normalize']
 		#### imgopts += ['-edge','2']
 
 		#imgopts +=['-scale','50%x50%']
@@ -157,7 +159,18 @@ if img is not None:
 		#imgopts +=['-scale','200%x200%']
 
 		if 'input_dither' in form:
-			imgopts += ['-ordered-dither',form['input_dither'].value]
+			d = form['input_dither'].value
+			if d == 'Floyd Steinberg (Fine)':
+				imgopts += ['-dither','FloydSteinberg','-colors','2']
+			elif d == 'Simple BW Threshold':
+				th = form['input_threshold'].value
+				imgopts +=['-threshold',th+'%']
+			elif d == 'Floyd Steinberg':
+				imgopts +=['-scale','50%x50%']
+				imgopts += ['-dither','FloydSteinberg','-colors','2']
+				imgopts +=['-scale','200%x200%']
+			else:
+				imgopts += ['-ordered-dither',d]
 		#imgopts += ['-ordered-dither','h4x4o']
 		#imgopts += ['-ordered-dither','c7x7b']
 		#imgopts += ['-ordered-dither','h8x8a']
@@ -167,6 +180,7 @@ if img is not None:
 		ditheropts = [
 			'Simple BW Threshold',
 			'Floyd Steinberg',
+			'Floyd Steinberg (Fine)',
 			'h4x4o',
 			'c7x7b',
 			'h8x8a',
@@ -176,10 +190,14 @@ if img is not None:
 		]
 		opts['ditheropts']=""
 		for x in ditheropts:
-			opts['ditheropts'] += "<option value='{0}'>{0}</option>\n".format(x)
+			sel=""
+			if 'input_dither' in form and x == form['input_dither'].value:
+				sel="selected"
+			opts['ditheropts'] += "<option {1} value='{0}'>{0}</option>\n".format(x,sel)
 	
 
-		imgopts +=['-threshold','50%']
+		imgopts += ['-normalize']
+		#imgopts +=['-threshold','50%']
 		
 		opts['debug'] += "\n"
 		opts['debug'] += " ".join(imgopts)
