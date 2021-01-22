@@ -94,7 +94,7 @@ function change_width() {
 	var dw = document.getElementById("input_dest_width").value;
 	var dh = document.getElementById("input_dest_height");
 
-	dh.value = (w*dw/h)
+	dh.value = (h*dw/w)
 }
 
 /* WHen we change the destination height, change the dest width, proportionaly */
@@ -104,7 +104,7 @@ function change_height() {
 	var dh = document.getElementById("input_dest_height").value;
 	var dw = document.getElementById("input_dest_width");
 
-	dw.value = (h*dh/w)
+	dw.value = (w*dh/h)
 }
 function change_brightness() {
 	var t = document.getElementById("input_brightness");

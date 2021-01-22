@@ -219,14 +219,68 @@ if img is not None:
 				sel="selected"
 			opts['ditheropts'] += "<option {1} value='{0}'>{0}</option>\n".format(x,sel)
 	
+		hatching = {
+			'(None)':None,
+			'Diagonal':\
+"0,0,0,0,5,"+\
+"0,0,0,5,0,"+\
+"0,0,5,0,0,"+\
+"0,5,0,0,0,"+\
+"5,0,0,0,0",
+			'Cross':
+"0,0,3,0,0,"+\
+"0,0,4,0,0,"+\
+"3,4,5,4,3,"+\
+"0,0,4,0,0,"+\
+"0,0,3,0,0",
+			'Star':
+"0,0,3,0,0,"+\
+"0,0,4,0,0,"+\
+"3,4,5,4,3,"+\
+"0,5,4,0,0,"+\
+"5,0,3,0,0",
+			'Horizontal':
+"0,0,0,0,0,"+\
+"0,0,0,0,0,"+\
+"5,5,5,5,5,"+\
+"0,0,0,0,0,"+\
+"0,0,0,0,0",
+			'Vertical':
+"0,0,5,0,0,"+\
+"0,0,5,0,0,"+\
+"0,0,5,0,0,"+\
+"0,0,4,0,0,"+\
+"0,0,5,0,0",
+			'Thicken':
+"0,0,2,0,0,"+\
+"0,3,5,3,0,"+\
+"2,5,5,5,2,"+\
+"0,3,5,3,0,"+\
+"0,0,2,0,0"
+		}
+		opts['hatching']=""
+		for x in sorted(hatching.keys()):
+			sel=""
+			if 'input_hatching' in form and x == form['input_hatching'].value:
+				sel="selected"
+			opts['hatching'] += "<option {1} value='{0}'>{0}</option>\n".format(x,sel)
 
+		#imgopts += ['-convolve','0,3,0,3,5,3,0,3,0']
+
+		if 'input_hatching' in form: 
+			h= hatching[form['input_hatching'].value]
+			if h is not None:
+				imgopts += ['-convolve', h]
 		imgopts += ['-normalize']
-		#imgopts +=['-threshold','50%']
+		imgopts +=['-threshold','50%']
 
 		#
 		# Torque the image for display
 		# Double the width
-		#imgopts+=['-size','200%x100%']
+		newsize = '{0}x{1}'.format(str(int(ww)*2),str(int(hh)))
+		imgopts +=['-resize',newsize,'-background','white','-gravity','west','-extent',newsize]
+		imgopts+=['-copy','{0}x{1}'.format(ww,hh),"{0},0".format(ww,0)]
+		imgopts+=['(','-clone','0','-crop','20x20+150+150','-repage','+200+200!',')','-flatten']
 		
 		
 		opts['debug'] += "\n"

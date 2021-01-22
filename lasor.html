@@ -153,6 +153,7 @@
 										<input type="radio" class=".btn-group-toggle" name="input_posterize" value="8" id="input_posterize_8" autocomplete="off" > 8
 									</label>
 								</div>
+
 							</div> <!-- Input Goup -->
 							<h6 class="card-subtitle mb-2 text-muted">Dithering</h6>
 							<div class="input-group mb-3">
@@ -160,6 +161,7 @@
 									{ditheropts}
 								</select>
 							</div> <!-- Input Goup -->
+
 							<div class="input-group mb-3" id="threshold_group">
 								<div class="input-group-prepend">
 									<span class="input-group-text" id="basic-addon1">Threshold</span>
@@ -167,6 +169,14 @@
 									<input onchange="change_threshold_slider();" type="range" style="width:80%" class="mx-3 form-range" id="input_threshold_slider" min="0" max="100" id="customRange2" value="{threshold}">
 									<input oninput="change_threshold();" type="text" width="3" class="form-control" id="input_threshold" name="input_threshold" aria-label="Username" aria-describedby="basic-addon1" value="{threshold}">%
 							</div> <!-- Input Goup -->
+
+							<h6 class="card-subtitle mb-2 text-muted">Post-Hatching</h6>
+							<div class="input-group mb-3">
+								<select class="custom-select my-1 mr-sm-2" id="input_hatching" name="input_hatching">
+									{hatching}
+								</select>
+							</div> <!-- Input Goup -->
+
 						</div> <!-- Form Group -->
 					</div> <!-- Card_body -->
 				</div> <!-- Card -->
